@@ -1,0 +1,27 @@
+<ivy-module version="2.0">
+    <info organisation="com.bodybuilding" module="read-model-publish"/>
+
+    <configurations>
+        <conf name="default" description="default" />
+        <conf name="docsAndSources" description="docs and sources" />
+        <conf name="test" description="test" />
+    </configurations>
+
+
+    <dependencies defaultconf="default">
+        <dependency org="io.reactivex" name="rxjava" rev="1.0.0-rc.8"/>
+        <dependency org="io.reactivex" name="rxjava" rev="1.0.0-rc.8" conf="docsAndSources->sources,javadoc"/>
+
+        <!--this freaks on a org.springframework#spring-tx;working dependency..-->
+        <!--dependency org="com.bodybuilding" name="commerce-core-api" rev="2.0.2-SNAPSHOT"/-->
+
+
+        <!--test dependencies -->
+        <dependency org="junit" name="junit" rev="4.11" conf="test->default" />
+        <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3" conf="test->default" />
+        <dependency org="org.hamcrest" name="hamcrest-library" rev="1.3" conf="docsAndSources->sources,javadoc" />
+
+        <dependency org="org.apache.commons" name="commons-lang3" rev="3.1" conf="test->default" />
+        <dependency org="org.apache.commons" name="commons-lang3" rev="3.1" conf="docsAndSources->sources,javadoc" />
+    </dependencies>
+</ivy-module>

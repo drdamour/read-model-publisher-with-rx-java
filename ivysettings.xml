@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-settings>
+    <settings defaultResolver="main" />
+    <resolvers>
+        <chain name="main">
+            <ibiblio name="public" m2compatible="true" root="http://artifactory/remote-repos" />
+            <ibiblio name="bbcom local repos" m2compatible="true" root="http://artifactory/local-repos" />
+
+            <ibiblio name="libraries" m2compatible="true" usepoms="false" />
+        </chain>
+    </resolvers>
+</ivy-settings>

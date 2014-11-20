@@ -1,0 +1,54 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="commerce-read-model-publisher" default="dist" basedir=".">
+    <import file="ivy-install.xml"/>
+
+    <target name="build" depends="resolve-libs">
+
+    </target>
+
+    <property name="src" location="src/main/java"/>
+    <property name="build" location="build"/>
+    <property name="dist"  location="dist"/>
+    <property name="ivy.retrieve.pattern" value="lib/[conf]/[artifact]-[revision](-[type]).[ext]"/>
+
+    <target name="compile" depends="resolve-libs" description="compile the source " >
+        <mkdir dir="${build}"/>
+
+        <!-- Compile the java code from ${src} into ${build} -->
+        <javac srcdir="${src}" destdir="${build}"/>
+    </target>
+
+    <target name="dist" depends="compile" description="generate the distribution" >
+        <!-- Create the distribution directory -->
+        <mkdir dir="${dist}"/>
+
+        <tstamp/>
+
+        <!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file -->
+        <jar jarfile="${dist}/crmp-${DSTAMP}.jar" basedir="${build}"/>
+    </target>
+
+    <target name="clean"
+            description="clean up" >
+        <!-- Delete the ${build} and ${dist} directory trees -->
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+        <delete dir="lib"/>
+    </target>
+
+    <target name="clean-all" depends="clean" description="clean ivy cache">
+        <ivy:cleancache />
+    </target>
+
+    <target name="resolve-libs" description="--> retrieve dependencies with ivy" depends="init-ivy">
+        <ivy:retrieve conf="default"/>
+    </target>
+
+    <target name="resolve-libs-test" description="--> retrieve test dependencies with ivy" depends="init-ivy">
+        <ivy:retrieve conf="test" />
+    </target>
+
+    <target name="resolve-all" description="--> retrieve ALL dependencies with ivy" depends="init-ivy">
+        <ivy:retrieve />
+    </target>
+
+</project>

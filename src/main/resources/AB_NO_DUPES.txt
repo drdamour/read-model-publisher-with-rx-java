@@ -1,0 +1,9 @@
+# NOTE No B's that have Corresponding A's are Even
+TypeA:55
+TypeA:56
+TypeB:55
+TypeA:57
+TypeB:60
+TypeA:58
+TypeA:59
+TypeB:34
