@@ -39,10 +39,10 @@ Attempts with Akka
 * Akka with multiple Thread pools, IO Actor Pool
 * Multiple Thread Pools, Akka system inside ATG: note experienced enough
 * What we lose: 
-** 	recovery!
-**	Living System
-**	Built in monitoring tools
-**	Channels that support multiple messages (Update Prod 123, Switch target to Database 2)
+  * 	recovery!
+  *	Living System
+  *	Built in monitoring tools
+  *	Channels that support multiple messages (Update Prod 123, Switch target to Database 2)
 
 
 Positive outcome #1 from Akka: Ivy
@@ -50,17 +50,17 @@ Positive outcome #1 from Akka: Ivy
 * Akka has a lot of dependencies and I'm lazy
 * Ivy for dependency injection
 * Command line app for DL dependencies…with a very nice Ant Task Plugin Set
-** Ivy.xml
-** Build.xml just needs
-*** ivy-install.xml
-*** ivy.xml
-*** xmlns:ivy="antlib:org.apache.ivy.ant"
-*** <import file="ivy-install.xml"/>
+  * Ivy.xml
+  * Build.xml just needs
+    * ivy-install.xml
+    * ivy.xml
+    * xmlns:ivy="antlib:org.apache.ivy.ant"
+    * <import file="ivy-install.xml"/>
 		<target name="resolve-libs" description="--> retrieve dependencies with ivy" depends="init-ivy">
 		        <ivy:retrieve  />
 		    </target>
-** Works with our artifactory
-** Show some tasks in intellij
+  * Works with our artifactory
+  * Show some tasks in intellij
 * TODO: generate manifest.mf file
 
 
@@ -78,29 +78,29 @@ Changes the actor drawing a bit, instead of actors sending messages, it is Obser
 
 Intro
 * 4 Test Files:
-** AB_NO_DUPES
-** AB_DUPES
-** ABC_NO_DUPES
-** ABC_DUPES
+  * AB_NO_DUPES
+  * AB_DUPES
+  * ABC_NO_DUPES
+  * ABC_DUPES
 * Applications:simulateChanges
-**  Reads line by line and sends them down
-**  Simulates a collection of changes as part of a BCC project update.  In real implementation we'd take that BCC Project type instead of a file name
-** Note the on completed
+  *  Reads line by line and sends them down
+  *  Simulates a collection of changes as part of a BCC project update.  In real implementation we'd take that BCC Project type instead of a file name
+  * Note the on completed
 * Assets:
-** Asset
-**  BaseType
-***    ID
-***    Source
-***    Creation Thread
-**  TypeA
-**  TypeB
-**  TypeC
+  * Asset
+  *  BaseType
+    *    ID
+    *    Source
+    *    Creation Thread
+  *  TypeA
+  *  TypeB
+  *  TypeC
 * Observers
-**  "WriterObservers"
-***	Just collect the things they see for inspection later
-***	These would be the things that save stuff into a mongo DB
-***	They write out all their contents on complete
-**  LogAction just for various debugging output
+  *  "WriterObservers"
+    *	Just collect the things they see for inspection later
+    *	These would be the things that save stuff into a mongo DB
+    *	They write out all their contents on complete
+  *  LogAction just for various debugging output
   
 
 Straight Project Update
@@ -277,10 +277,10 @@ What's Missing?
 * Determining everything is complete
 * Unsubscribing (may not be needed in Java) would just be a teardown in the System class
 * A/B switching -> there's techniques for this, just didn't get to them yet.  Key things:
-** when a Seed is happening…how do we buffer BCC projects to target B before we execute the siwtch
-** What do we do when a seed is in progress and another is requested
-** How do we reliably notify the API that it should switch db's?
-** How do we make sure a API server when it starts up uses the right db
+  * when a Seed is happening…how do we buffer BCC projects to target B before we execute the siwtch
+  * What do we do when a seed is in progress and another is requested
+  * How do we reliably notify the API that it should switch db's?
+  * How do we make sure a API server when it starts up uses the right db
 * Doing the actual writing…constructor chain followed by a writing subscriber I believe would be best
 * Writing only when needed…maybe there a way to keep a hash/etag in mongo DB so that we can just discard some requested changes because we know they won't be needed.
 * Composition performance improvements.  If A has a B, and B changed then when creating A we don't need to recreate B since B was already created by the B writer.  How do we send a handle to the updated B to this A?  Thinking Join's in the writer chains
