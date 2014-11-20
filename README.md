@@ -273,18 +273,18 @@ There's built in thread pools for compuation or io.  You can make other types if
 
 What's Missing?
 =======================
-Dealing with onError in RxJava
-Determining everything is complete
-Unsubscribing (may not be needed in Java) would just be a teardown in the System class
-A/B switching -> there's techniques for this, just didn't get to them yet.  Key things:
-	• when a Seed is happening…how do we buffer BCC projects to target B before we execute the siwtch
-	• What do we do when a seed is in progress and another is requested
-	• How do we reliably notify the API that it should switch db's?
-	• How do we make sure a API server when it starts up uses the right db
-Doing the actual writing…constructor chain followed by a writing subscriber I believe would be best
-Writing only when needed…maybe there a way to keep a hash/etag in mongo DB so that we can just discard some requested changes because we know they won't be needed.
-Composition performance improvements.  If A has a B, and B changed then when creating A we don't need to recreate B since B was already created by the B writer.  How do we send a handle to the updated B to this A?  Thinking Join's in the writer chains
-Backpressure - cause we need real data
-Retro lambda - https://github.com/orfjackal/retrolambda
+* Dealing with onError in RxJava
+* Determining everything is complete
+* Unsubscribing (may not be needed in Java) would just be a teardown in the System class
+* A/B switching -> there's techniques for this, just didn't get to them yet.  Key things:
+** when a Seed is happening…how do we buffer BCC projects to target B before we execute the siwtch
+** What do we do when a seed is in progress and another is requested
+** How do we reliably notify the API that it should switch db's?
+** How do we make sure a API server when it starts up uses the right db
+* Doing the actual writing…constructor chain followed by a writing subscriber I believe would be best
+* Writing only when needed…maybe there a way to keep a hash/etag in mongo DB so that we can just discard some requested changes because we know they won't be needed.
+* Composition performance improvements.  If A has a B, and B changed then when creating A we don't need to recreate B since B was already created by the B writer.  How do we send a handle to the updated B to this A?  Thinking Join's in the writer chains
+* Backpressure - cause we need real data
+* Retro lambda - https://github.com/orfjackal/retrolambda
 
 
