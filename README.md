@@ -6,100 +6,101 @@ Precursor
 https://github.com/orfjackal/retrolambda - a bit more technical I'd read it first AND last
 
 Nice step by step guide:
-http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/
-http://blog.danlew.net/2014/09/22/grokking-rxjava-part-2/
-http://blog.danlew.net/2014/09/30/grokking-rxjava-part-3/
-http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/
+* http://blog.danlew.net/2014/09/15/grokking-rxjava-part-1/
+* http://blog.danlew.net/2014/09/22/grokking-rxjava-part-2/
+* http://blog.danlew.net/2014/09/30/grokking-rxjava-part-3/
+* http://blog.danlew.net/2014/10/08/grokking-rxjava-part-4/
 
 
 Presentation of Vision
 ======================================
 Goal: Draw the Vision of Data Sharing
-App <-> API <-> Data (API not necessarily RESTful.  Take fullsite, UI is the site, API is ATG/droplets, etc, DB is Oracle)
-Show UX boundry.  UX is not the UI, it's what can be done, and how it's done.  Organization of data, methods available.  The heart of the application, where all the edge cases are solved.
-New App, different Ux, New Boundry on API: it's OK…but not always the best
-Split the API…still ok
-Build common API for common UX pieces….still ok
-Replicate the Data, move the UX completely, simplify the picture a bit
-Writes go back to original source, update a bunch of the lines with double arrows to single arrows
-How hypermedia helps with this, client doesn't need to know they're different "stacks"
-Bring in a 3rd replication, another DB, replicate some to 2nd writes still go to third.
-Erase like form 3rd to 2nd DB, make it 1st to third, make line read only from 3rd api to app, line from 3rd api to 2nd api.  ENDECA!
+
+* App <-> API <-> Data (API not necessarily RESTful.  Take fullsite, UI is the site, API is ATG/droplets, etc, DB is Oracle)
+* Show UX boundry.  UX is not the UI, it's what can be done, and how it's done.  Organization of data, methods available.  The heart of the application, where all the edge cases are solved.
+* New App, different Ux, New Boundry on API: it's OK…but not always the best
+* Split the API…still ok
+* Build common API for common UX pieces….still ok
+* Replicate the Data, move the UX completely, simplify the picture a bit
+* Writes go back to original source, update a bunch of the lines with double arrows to single arrows
+* How hypermedia helps with this, client doesn't need to know they're different "stacks"
+* Bring in a 3rd replication, another DB, replicate some to 2nd writes still go to third.
+* Erase like form 3rd to 2nd DB, make it 1st to third, make line read only from 3rd api to app, line from 3rd api to 2nd api.  ENDECA!
 
 
 Attempts with Akka
 =================================
-Draw Actor Model/Dependency Matrix
-Draw Oracle DB and Mongo DB
-Akka actors talking to oracle talking to mongo
-wrap oracle DB with Nucleus
-Describe Thread Pool and Akka's Approach to Millions of Actors
-Blocking IO vs Async IO
-Akka with multiple Thread pools, IO Actor Pool
-Multiple Thread Pools, Akka system inside ATG: note experienced enough
-What we lose: 
-	recovery!
-	Living System
-	Built in monitoring tools
-	Channels that support multiple messages (Update Prod 123, Switch target to Database 2)
+* Draw Actor Model/Dependency Matrix
+* Draw Oracle DB and Mongo DB
+* Akka actors talking to oracle talking to mongo
+* wrap oracle DB with Nucleus
+* Describe Thread Pool and Akka's Approach to Millions of Actors
+* Blocking IO vs Async IO
+* Akka with multiple Thread pools, IO Actor Pool
+* Multiple Thread Pools, Akka system inside ATG: note experienced enough
+* What we lose: 
+** 	recovery!
+**	Living System
+**	Built in monitoring tools
+**	Channels that support multiple messages (Update Prod 123, Switch target to Database 2)
 
 
 Positive outcome #1 from Akka: Ivy
 =======================================
-Akka has a lot of dependencies and I'm lazy
-Ivy for dependency injection
-Command line app for DL dependencies…with a very nice Ant Task Plugin Set
-	• Ivy.xml
-	• Build.xml just needs
-		○ ivy-install.xml
-		○ ivy.xml
-		○ xmlns:ivy="antlib:org.apache.ivy.ant"
-		○ <import file="ivy-install.xml"/>
+* Akka has a lot of dependencies and I'm lazy
+* Ivy for dependency injection
+* Command line app for DL dependencies…with a very nice Ant Task Plugin Set
+** Ivy.xml
+** Build.xml just needs
+*** ivy-install.xml
+*** ivy.xml
+*** xmlns:ivy="antlib:org.apache.ivy.ant"
+*** <import file="ivy-install.xml"/>
 		<target name="resolve-libs" description="--> retrieve dependencies with ivy" depends="init-ivy">
 		        <ivy:retrieve  />
 		    </target>
-	• Works with our artifactory
-	• Show some tasks in intellij
-	• TODO: generate manifest.mf file
+** Works with our artifactory
+** Show some tasks in intellij
+* TODO: generate manifest.mf file
 
 
 Positive outcome #2 from Akka: RxJava
 =======================================
-Mention Talk about FRP
-Akka is inherently Asynchronous.  Talking ot Async stuff usually means Future, but a Future is just one response.  What about when many things can happen?  Rx is a nice solution.  https://github.com/ReactiveX/RxJava/wiki
+* Mention Talk about FRP
+* Akka is inherently Asynchronous.  Talking ot Async stuff usually means Future, but a Future is just one response.  What about when many things can happen?  Rx is a nice solution.  https://github.com/ReactiveX/RxJava/wiki
 
-So you can use Rx to front asynchronous libraries: Akka, Retrofit, Hystrix, Etc
-You can use RxJava all by itself too.
-Refresher: Observable (out) and Observer(in).  Observer's subscribe to Observables.  When something is both an observable & an observer it is known as a Subject (remember for later!)
-Observables are composable via a lot of commong funciton concepts: map, join, flatMap, zip, merge, group, buffer, window, combine, switch, etc.
+* So you can use Rx to front asynchronous libraries: Akka, Retrofit, Hystrix, Etc
+* You can use RxJava all by itself too.
+* Refresher: Observable (out) and Observer(in).  Observer's subscribe to Observables.  When something is both an observable & an observer it is known as a Subject (remember for later!)
+* Observables are composable via a lot of commong funciton concepts: map, join, flatMap, zip, merge, group, buffer, window, combine, switch, etc.
 
 Changes the actor drawing a bit, instead of actors sending messages, it is Observers listening to Observables in the "System"
 
 Intro
-4 Test Files:
-AB_NO_DUPES
-AB_DUPES
-ABC_NO_DUPES
-ABC_DUPES
-Applications:simulateChanges
-  Reads line by line and sends them down
-  Simulates a collection of changes as part of a BCC project update.  In real implementation we'd take that BCC Project type istead of a file name
-  Note the on completed
-Assets:
-  Asset
-  BaseType
-    ID
-    Source
-    Creation Thread
-  TypeA
-  TypeB
-  TypeC
-Observers
-  "WriterObservers"
-	Just collect the things they see for inspection later
-	These would be the things that save stuff into a mongo DB
-	They write out all their contents on complete
-  LogAction just for various debugging output
+* 4 Test Files:
+** AB_NO_DUPES
+** AB_DUPES
+** ABC_NO_DUPES
+** ABC_DUPES
+* Applications:simulateChanges
+**  Reads line by line and sends them down
+**  Simulates a collection of changes as part of a BCC project update.  In real implementation we'd take that BCC Project type instead of a file name
+** Note the on completed
+* Assets:
+** Asset
+**  BaseType
+***    ID
+***    Source
+***    Creation Thread
+**  TypeA
+**  TypeB
+**  TypeC
+* Observers
+**  "WriterObservers"
+***	Just collect the things they see for inspection later
+***	These would be the things that save stuff into a mongo DB
+***	They write out all their contents on complete
+**  LogAction just for various debugging output
   
 
 Straight Project Update
