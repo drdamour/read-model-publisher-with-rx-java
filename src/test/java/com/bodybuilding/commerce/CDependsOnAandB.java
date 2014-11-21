@@ -7,6 +7,7 @@ import com.bodybuilding.commerce.observers.TypeBWriterObserver;
 import com.bodybuilding.commerce.observers.TypeCWriterObserver;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
+import rx.Notification;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.functions.Func2;
@@ -150,8 +151,9 @@ public class CDependsOnAandB {
 
 
         Observable<TypeC> csTriggeredByAAndB = Observable.merge(
-            typeAChanged
-            .groupJoin(typeBChanged,
+            typeAChanged.doOnEach(new LogAction(""))
+
+            .groupJoin(typeBChanged.doOnEach(new LogAction("")),
                 new Func1<TypeA, Observable<Object>>() {
                     @Override
                     public Observable<Object> call(TypeA typeA) {
@@ -167,18 +169,19 @@ public class CDependsOnAandB {
                 new Func2<TypeA, Observable<TypeB>, Observable<Pair<TypeA, TypeB>>>() {
                     @Override
                     public Observable<Pair<TypeA, TypeB>> call(final TypeA typeA, Observable<TypeB> typeBObservable) {
-                        return typeBObservable.filter(new Func1<TypeB, Boolean>() {
-                            @Override
-                            public Boolean call(TypeB typeB) {
-                                return typeB.getId().equals(typeA.getId());
-                            }
-                        })
-                        .map(new Func1<TypeB, Pair<TypeA, TypeB>>() {
-                            @Override
-                            public Pair<TypeA, TypeB> call(TypeB typeB) {
-                                return  Pair.of(typeA, typeB);
-                            }
-                        });
+                        return typeBObservable
+                            .filter(new Func1<TypeB, Boolean>() {
+                                @Override
+                                public Boolean call(TypeB typeB) {
+                                    return typeB.getId().equals(typeA.getId());
+                                }
+                            })
+                            .map(new Func1<TypeB, Pair<TypeA, TypeB>>() {
+                                @Override
+                                public Pair<TypeA, TypeB> call(TypeB typeB) {
+                                    return Pair.of(typeA, typeB);
+                                }
+                            });
                     }
                 }
             )
@@ -186,7 +189,7 @@ public class CDependsOnAandB {
         .map(new Func1<Pair<TypeA, TypeB>, TypeC>() {
             @Override
             public TypeC call(Pair<TypeA, TypeB> p) {
-                return new TypeC(p.getLeft().getId(), "BOTH[" + p.getLeft().getSource() +  "," + p.getRight().getSource() + "]");
+                return new TypeC(p.getLeft().getId(), "BOTH[" + p.getLeft().getSource() + "," + p.getRight().getSource() + "]");
             }
         });
 

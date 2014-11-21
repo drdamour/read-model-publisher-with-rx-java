@@ -62,7 +62,7 @@ public class BDependsOnAWhenAIsOdd {
                 .map(new Func1<TypeA, TypeB>() {
                     @Override
                     public TypeB call(TypeA typeA) {
-                        return new TypeB(typeA.getId(), typeA.getSource());
+                        return new TypeB(typeA.getId(), typeA.makeSourceString());
                     }
                 })
                 //Send these over as B change requests
@@ -79,7 +79,7 @@ public class BDependsOnAWhenAIsOdd {
                     @Override
                     public Observable<TypeB> call(TypeA typeA) {
                         if(typeA.getId() % 2 == 1) {
-                            return Observable.just(new TypeB(typeA.getId(), typeA.getSource()));
+                            return Observable.just(new TypeB(typeA.getId(), typeA.makeSourceString()));
                         } else {
                             return Observable.never();
                         }
@@ -100,7 +100,7 @@ public class BDependsOnAWhenAIsOdd {
                     @Override
                     public Observable<TypeB> call(TypeA typeA) {
                         if (typeA.getId() % 2 == 1) {
-                            return Observable.just(new TypeB(typeA.getId(), typeA.getSource()));
+                            return Observable.just(new TypeB(typeA.getId(), typeA.makeSourceString()));
                         } else {
                             return Observable.never();
                         }

@@ -56,7 +56,7 @@ public class BDependsOnATwoBsPerA {
                 .map(new Func1<TypeA, TypeB>() {
                     @Override
                     public TypeB call(TypeA typeA) {
-                        return new TypeB(typeA.getId()-10, typeA.getSource());
+                        return new TypeB(typeA.getId()-10, typeA.makeSourceString());
                     }
                 })
                 //Send these over as B change requests
@@ -67,7 +67,7 @@ public class BDependsOnATwoBsPerA {
                 .map(new Func1<TypeA, TypeB>() {
                     @Override
                     public TypeB call(TypeA typeA) {
-                        return new TypeB(typeA.getId()+10, typeA.getSource());
+                        return new TypeB(typeA.getId()+10, typeA.makeSourceString());
                     }
                 })
                 //Send these over as B change requests
@@ -85,8 +85,8 @@ public class BDependsOnATwoBsPerA {
                     public Observable<TypeB> call(TypeA typeA) {
 
                         return Observable.just(
-                            new TypeB(typeA.getId()+10, typeA.getSource()),
-                            new TypeB(typeA.getId()-10, typeA.getSource())
+                            new TypeB(typeA.getId()+10, typeA.makeSourceString()),
+                            new TypeB(typeA.getId()-10, typeA.makeSourceString())
                         );
 
                     }
@@ -106,8 +106,8 @@ public class BDependsOnATwoBsPerA {
                     @Override
                     public Observable<TypeB> call(TypeA typeA) {
                         return Observable.just(
-                            new TypeB(typeA.getId()+10, typeA.getSource()),
-                            new TypeB(typeA.getId()-10, typeA.getSource())
+                            new TypeB(typeA.getId()+10, typeA.makeSourceString()),
+                            new TypeB(typeA.getId()-10, typeA.makeSourceString())
                         );
                     }
                 })
